@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:assingement/pages/home.dart';
 import 'package:assingement/pages/addrecipe.dart';
-import 'package:assingement/pages/view_recipe.dart'; // Make sure this exists
-import 'package:assingement/pages/login.dart'; // <-- This should be your login page
+import 'package:assingement/pages/view_recipe.dart';
+import 'package:assingement/pages/login.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -77,7 +77,6 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-
               // Email
               Text(
                 user.email ?? 'No email',
@@ -85,7 +84,7 @@ class ProfilePage extends StatelessWidget {
               ),
               const SizedBox(height: 40),
 
-              // Recipes
+              // My Recipes Section
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('recipes')
@@ -102,149 +101,179 @@ class ProfilePage extends StatelessWidget {
                   final docs = snapshot.data!.docs;
 
                   return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        'My Recipes (${docs.length})',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                      // Centered My Recipes text with count
+                      Center(
+                        child: Text(
+                          'My Recipes (${docs.length})',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       const SizedBox(height: 20),
                       if (docs.isEmpty)
                         const Text('You have not added any recipes yet.')
                       else
-                        Column(
-                          children: docs.map((doc) {
-                            final recipe = doc.data()! as Map<String, dynamic>;
+                        Center(
+                          child: Column(
+                            children: docs.map((doc) {
+                              final recipe =
+                                  doc.data()! as Map<String, dynamic>;
 
-                            return Container(
-                              width: cardWidth,
-                              margin: const EdgeInsets.only(bottom: 20.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 5),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  recipe['imageUrl'] != null &&
-                                          recipe['imageUrl'] != ''
-                                      ? ClipRRect(
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(12),
-                                            topRight: Radius.circular(12),
-                                          ),
-                                          child: Image.network(
-                                            recipe['imageUrl'],
+                              return Container(
+                                width: cardWidth,
+                                margin: const EdgeInsets.only(bottom: 20.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 5),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    recipe['imageUrl'] != null &&
+                                            recipe['imageUrl'] != ''
+                                        ? Stack(
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                      topLeft: Radius.circular(
+                                                        12,
+                                                      ),
+                                                      topRight: Radius.circular(
+                                                        12,
+                                                      ),
+                                                    ),
+                                                child: Image.network(
+                                                  recipe['imageUrl'],
+                                                  height: 150,
+                                                  width: double.infinity,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              Positioned.fill(
+                                                child: Container(
+                                                  alignment: Alignment.center,
+                                                  color: Colors.black26,
+                                                  child: Text(
+                                                    recipe['title'] ??
+                                                        'No Title',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 24,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : Container(
                                             height: 120,
                                             width: double.infinity,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        )
-                                      : Container(
-                                          height: 120,
-                                          width: double.infinity,
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(12),
-                                              topRight: Radius.circular(12),
+                                            decoration: const BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(12),
+                                                topRight: Radius.circular(12),
+                                              ),
+                                              gradient: LinearGradient(
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                                colors: [
+                                                  Color(0xffFF6B35),
+                                                  Colors.amber,
+                                                ],
+                                              ),
                                             ),
-                                            gradient: LinearGradient(
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                              colors: [
-                                                Color(0xffFF6B35),
-                                                Colors.amber,
-                                              ],
-                                            ),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Align(
-                                              alignment: Alignment.bottomLeft,
+                                            child: Center(
                                               child: Text(
                                                 recipe['title'] ?? 'No Title',
                                                 style: const TextStyle(
                                                   color: Colors.white,
-                                                  fontSize: 20,
+                                                  fontSize: 24,
                                                   fontWeight: FontWeight.bold,
                                                 ),
+                                                textAlign: TextAlign.center,
                                               ),
                                             ),
                                           ),
-                                        ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          recipe['title'] ?? '',
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black87,
+                                    Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            recipe['title'] ?? '',
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black87,
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          'By: You • ${recipe['cookingTime'] ?? '?'} minutes',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[700],
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            'By: You • ${recipe['cookingTime'] ?? '?'} minutes',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey[700],
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Align(
-                                          alignment: Alignment.centerRight,
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ViewRecipePage(
-                                                        recipe: recipe,
-                                                      ),
-                                                ),
-                                              );
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: const Color(
-                                                0xffFF6B35,
-                                              ),
-                                              foregroundColor: Colors.white,
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 20,
-                                                    vertical: 10,
+                                          const SizedBox(height: 12),
+                                          Align(
+                                            alignment: Alignment.centerRight,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ViewRecipePage(
+                                                          recipe: recipe,
+                                                        ),
                                                   ),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
+                                                );
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: const Color(
+                                                  0xffFF6B35,
+                                                ),
+                                                foregroundColor: Colors.white,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 10,
+                                                    ),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
                                               ),
+                                              child: const Text('View Recipe'),
                                             ),
-                                            child: const Text('View Recipe'),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
                         ),
                     ],
                   );

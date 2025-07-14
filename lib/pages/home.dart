@@ -95,19 +95,38 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Image or Gradient Header
+                          // Image or Gradient Header with centered title
                           recipe['imageUrl'] != null && recipe['imageUrl'] != ''
-                              ? ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(12),
-                                    topRight: Radius.circular(12),
-                                  ),
-                                  child: Image.network(
-                                    recipe['imageUrl'],
-                                    height: 150,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
+                              ? Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(12),
+                                        topRight: Radius.circular(12),
+                                      ),
+                                      child: Image.network(
+                                        recipe['imageUrl'],
+                                        height: 150,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Positioned.fill(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        color: Colors.black26, // semi-transparent overlay
+                                        child: Text(
+                                          recipe['title'] ?? 'No Title',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 )
                               : Container(
                                   height: 120,
@@ -123,18 +142,15 @@ class _HomePageState extends State<HomePage> {
                                       colors: [Color(0xffFF6B35), Colors.amber],
                                     ),
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Align(
-                                      alignment: Alignment.bottomLeft,
-                                      child: Text(
-                                        recipe['title'] ?? 'No Title',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                  child: Center(
+                                    child: Text(
+                                      recipe['title'] ?? 'No Title',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
                                       ),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ),
@@ -143,10 +159,11 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                // Title repeated below (optional: you can remove this if you don't want duplicate title)
                                 Text(
                                   recipe['title'] ?? '',
                                   style: const TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black87,
                                   ),
