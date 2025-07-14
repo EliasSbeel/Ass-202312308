@@ -22,12 +22,10 @@ class _HomePageState extends State<HomePage> {
     final docRef = FirebaseFirestore.instance.collection('recipes').doc(doc.id);
 
     if (likedBy.contains(user!.email)) {
-      // Unlike
       await docRef.update({
         'likedBy': FieldValue.arrayRemove([user!.email]),
       });
     } else {
-      // Like
       await docRef.update({
         'likedBy': FieldValue.arrayUnion([user!.email]),
       });
@@ -78,8 +76,7 @@ class _HomePageState extends State<HomePage> {
                   children: recipes.map((doc) {
                     final recipe = doc.data() as Map<String, dynamic>;
                     final likedBy = recipe['likedBy'] ?? [];
-                    final isLiked =
-                        user != null && likedBy.contains(user!.email);
+                    final isLiked = user != null && likedBy.contains(user!.email);
 
                     return Container(
                       width: cardWidth,
@@ -156,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  'By: ${recipe['author'] ?? 'Unknown'} • ${recipe['cookingTime'] ?? '?'} minutes',
+                                  'By: ${recipe['author']} • ${recipe['cookingTime']} minutes',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey[700],
@@ -174,8 +171,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 const SizedBox(height: 16),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     InkWell(
                                       onTap: () => _toggleLike(doc),
@@ -185,9 +181,7 @@ class _HomePageState extends State<HomePage> {
                                             isLiked
                                                 ? Icons.favorite
                                                 : Icons.favorite_border,
-                                            color: isLiked
-                                                ? Colors.red
-                                                : Colors.grey,
+                                            color: isLiked ? Colors.red : Colors.grey,
                                             size: 22,
                                           ),
                                           const SizedBox(width: 4),
@@ -212,18 +206,14 @@ class _HomePageState extends State<HomePage> {
                                         );
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: const Color(
-                                          0xffFF6B35,
-                                        ),
+                                        backgroundColor: const Color(0xffFF6B35),
                                         foregroundColor: Colors.white,
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 20,
                                           vertical: 10,
                                         ),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
                                       ),
                                       child: const Text('View Recipe'),
@@ -246,10 +236,7 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle),
-            label: 'Add Recipe',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Add Recipe'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
         currentIndex: 0,

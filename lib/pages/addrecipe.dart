@@ -46,7 +46,6 @@ class _AddRecipeState extends State<AddRecipe> {
       return;
     }
 
-    // Save recipe to Firestore
     await FirebaseFirestore.instance.collection('recipes').add({
       'title': title,
       'description': description,
@@ -54,6 +53,7 @@ class _AddRecipeState extends State<AddRecipe> {
       'ingredients': _ingredients,
       'createdBy': user.uid,
       'authorEmail': user.email,
+      'author': user.displayName ?? user.email, // ✅ Fix: Save author properly
       'likes': 0,
       'likedBy': [],
     });
